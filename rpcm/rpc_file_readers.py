@@ -45,17 +45,18 @@ def read_rpc_ikonos(rpc_content):
             d[k] = ll[1]
     def parse_coeff(dic, prefix, indices):
         """ helper function"""
-        return ' ".join([dic["%s_%s" % (prefix, str(x))] for x in indices])
+        return " ".join([dic["%s_%s" % (prefix, str(x))] for x in indices])
     d["SAMP_NUM_COEFF"]  = parse_coeff(d, "SAMP_NUM_COEFF", range(1, 21))
     d["SAMP_DEN_COEFF"]  = parse_coeff(d, "SAMP_DEN_COEFF", range(1, 21))
     d["LINE_NUM_COEFF"]  = parse_coeff(d, "LINE_NUM_COEFF", range(1, 21))
     d["LINE_DEN_COEFF"]  = parse_coeff(d, "LINE_DEN_COEFF", range(1, 21))
+
     return d
 
 
 def read_rpc_xml(rpc_content):
     """
-    Read RPC file assuming the XML format and determine whether it"s a pleiades, spot-6 or worldview image
+    Read RPC file assuming the XML format and determine whether it’s a pleiades, spot-6 or worldview image
     Args:
         rpc_content: content of RPC sidecar file path read as a string (XML format)
     Returns:
@@ -162,8 +163,8 @@ def read_rpc_xml_pleiades_neo(tree):
             """
             helper function
             """
-
         return " ".join([element.find("%s_%s" % (prefix, str(x))).text for x in indices])
+
     
     # direct model (LOCALIZATION)
     d = tree.find("Rational_Function_Model/Global_RFM/ImagetoGround_Values")
@@ -244,7 +245,4 @@ def read_rpc_xml_worldview(tree):
     m["LAT_SCALE"   ] = float(im.find("LATSCALE").text)
     m["LONG_SCALE"  ] = float(im.find("LONGSCALE").text)
     m["HEIGHT_SCALE"] = float(im.find("HEIGHTSCALE").text)
-#    # image dimensions
-#    m.lastRow = int(tree.find("IMD/NUMROWS").text)
-#    m.lastCol = int(tree.find("IMD/NUMCOLUMNS").text)
     return m
