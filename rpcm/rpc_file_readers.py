@@ -5,7 +5,7 @@ from xml.etree import ElementTree
 
 
 def read_rpc_file(rpc_file):
-    “”"
+    """
     Read RPC from a file deciding the format from the extension of the filename.
       xml          : spot6, pleiades, worldview
       txt (others) : ikonos
@@ -13,7 +13,7 @@ def read_rpc_file(rpc_file):
         rpc_file: RPC sidecar file path
     Returns:
         dictionary read from the RPC file, or an empty dict if fail
-    “”"
+    """
     with open(rpc_file) as f:
         rpc_content = f.read()
     if rpc_file.lower().endswith(‘xml’):
@@ -28,13 +28,13 @@ def read_rpc_file(rpc_file):
 
 
 def read_rpc_ikonos(rpc_content):
-    “”"
+    """
     Read RPC file assuming the ikonos format
     Args:
         rpc_content: content of RPC sidecar file path read as a string
     Returns:
         dictionary read from the RPC file
-    “”"
+    """
     import re
     lines = rpc_content.split(‘\n’)
     d = {}
@@ -44,7 +44,7 @@ def read_rpc_ikonos(rpc_content):
             k = re.sub(r”[^a-zA-Z0-9_]“,”“,ll[0])
             d[k] = ll[1]
     def parse_coeff(dic, prefix, indices):
-        “”" helper function”“”
+        """ helper function"""
         return ' ’.join([dic[“%s_%s” % (prefix, str(x))] for x in indices])
     d[‘SAMP_NUM_COEFF’]  = parse_coeff(d, “SAMP_NUM_COEFF”, range(1, 21))
     d[‘SAMP_DEN_COEFF’]  = parse_coeff(d, “SAMP_DEN_COEFF”, range(1, 21))
@@ -54,7 +54,7 @@ def read_rpc_ikonos(rpc_content):
 
 
 def read_rpc_xml(rpc_content):
-    “”"
+    """
     Read RPC file assuming the XML format and determine whether it’s a pleiades, spot-6 or worldview image
     Args:
         rpc_content: content of RPC sidecar file path read as a string (XML format)
@@ -62,7 +62,7 @@ def read_rpc_xml(rpc_content):
         dictionary read from the RPC file
     Raises:
         NotImplementedError: if the file format is not handled (the expected keys are not found)
-    “”"
+    """
     # parse the xml file content
     tree = ElementTree.fromstring(rpc_content)
     # determine wether it’s a pleiades, spot-6 or worldview image
@@ -83,18 +83,18 @@ def read_rpc_xml(rpc_content):
 
 
 def read_rpc_xml_pleiades(tree):
-    “”"
+    """
     Read RPC fields from a parsed XML tree assuming the pleiades, spot-6 XML format
     Also reads the inverse model parameters
     Args:
         tree: parsed XML tree
     Returns:
         dictionary read from the RPC file, or empty dict in case of failure
-    “”"
+    """
     m = {}
     
     def parse_coeff(element, prefix, indices):
-        “”" helper function”“”
+        """ helper function"""
         return ' ’.join([element.find(“%s_%s” % (prefix, str(x))).text for x in indices])
     
     # direct model (LOCALIZATION)
@@ -146,18 +146,18 @@ def read_rpc_xml_pleiades(tree):
 
 
 def read_rpc_xml_pleiades_neo(tree):
-    “”"
+    """
     Read RPC fields from a parsed XML tree assuming the pleiades NEO XML format
     Also reads the inverse model parameters
     Args:
         tree: parsed XML tree
     Returns:
         dictionary read from the RPC file, or empty dict in case of failure
-    “”"
+    """
     m = {}
     
     def parse_coeff(element, prefix, indices):
-        “”" helper function”“”
+        """ helper function"""
         return ' ’.join([element.find(“%s_%s” % (prefix, str(x))).text for x in indices])
     
     # direct model (LOCALIZATION)
@@ -209,13 +209,13 @@ def read_rpc_xml_pleiades_neo(tree):
 
 
 def read_rpc_xml_worldview(tree):
-    “”"
+    """
     Read RPC fields from a parsed XML tree assuming the worldview XML format
     Args:
         tree: parsed XML tree
     Returns:
         dictionary read from the RPC file, or empty dict in case of failure
-    “”"
+    """
     m = {}
     # inverse model (PROJECTION)
     im = tree.find(‘RPB/IMAGE’)
