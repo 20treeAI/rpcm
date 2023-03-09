@@ -160,9 +160,9 @@ def read_rpc_xml_pleiades_neo(tree):
     m = {}
     
     def parse_coeff(element, prefix, indices):
-            """
-            helper function
-            """
+        """
+        helper function
+        """
         return " ".join([element.find("%s_%s" % (prefix, str(x))).text for x in indices])
 
     
