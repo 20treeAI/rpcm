@@ -2,6 +2,8 @@
 # Copyright (C) 2015-19, Gabriele Facciolo <facciolo@cmla.ens-cachan.fr>
 # Copyright (C) 2015-19, Enric Meinhardt <enric.meinhardt@cmla.ens-cachan.fr>
 from xml.etree import ElementTree
+
+
 def read_rpc_file(rpc_file):
     “”"
     Read RPC from a file deciding the format from the extension of the filename.
@@ -23,6 +25,8 @@ def read_rpc_file(rpc_file):
         # we assume that non xml rpc files follow the ikonos convention
         rpc = read_rpc_ikonos(rpc_content)
     return rpc
+
+
 def read_rpc_ikonos(rpc_content):
     “”"
     Read RPC file assuming the ikonos format
@@ -47,6 +51,8 @@ def read_rpc_ikonos(rpc_content):
     d[‘LINE_NUM_COEFF’]  = parse_coeff(d, “LINE_NUM_COEFF”, range(1, 21))
     d[‘LINE_DEN_COEFF’]  = parse_coeff(d, “LINE_DEN_COEFF”, range(1, 21))
     return d
+
+
 def read_rpc_xml(rpc_content):
     “”"
     Read RPC file assuming the XML format and determine whether it’s a pleiades, spot-6 or worldview image
@@ -74,6 +80,8 @@ def read_rpc_xml(rpc_content):
     if not parsed_rpc:
         raise NotImplementedError()
     return parsed_rpc
+
+
 def read_rpc_xml_pleiades(tree):
     “”"
     Read RPC fields from a parsed XML tree assuming the pleiades, spot-6 XML format
@@ -84,9 +92,11 @@ def read_rpc_xml_pleiades(tree):
         dictionary read from the RPC file, or empty dict in case of failure
     “”"
     m = {}
+    
     def parse_coeff(element, prefix, indices):
         “”" helper function”“”
         return ' ’.join([element.find(“%s_%s” % (prefix, str(x))).text for x in indices])
+    
     # direct model (LOCALIZATION)
     d = tree.find(‘Rational_Function_Model/Global_RFM/Direct_Model’)
     m[‘LON_NUM_COEFF’] = parse_coeff(d, “SAMP_NUM_COEFF”, range(1, 21))
@@ -133,6 +143,8 @@ def read_rpc_xml_pleiades(tree):
     m[‘LAST_LON’] = float(i.find(‘LAST_LON’).text)
     m[‘LAST_LAT’] = float(i.find(‘LAST_LAT’).text)
     return m
+
+
 def read_rpc_xml_pleiades_neo(tree):
     “”"
     Read RPC fields from a parsed XML tree assuming the pleiades NEO XML format
@@ -143,9 +155,11 @@ def read_rpc_xml_pleiades_neo(tree):
         dictionary read from the RPC file, or empty dict in case of failure
     “”"
     m = {}
+    
     def parse_coeff(element, prefix, indices):
         “”" helper function”“”
         return ' ’.join([element.find(“%s_%s” % (prefix, str(x))).text for x in indices])
+    
     # direct model (LOCALIZATION)
     d = tree.find(‘Rational_Function_Model/Global_RFM/ImagetoGround_Values’)
     m[‘LON_NUM_COEFF’] = parse_coeff(d, “LON_NUM_COEFF”, range(1, 21))
@@ -192,6 +206,8 @@ def read_rpc_xml_pleiades_neo(tree):
     m[‘LAST_LON’] = float(g.find(‘LAST_LON’).text)
     m[‘LAST_LAT’] = float(g.find(‘LAST_LAT’).text)
     return m
+
+
 def read_rpc_xml_worldview(tree):
     “”"
     Read RPC fields from a parsed XML tree assuming the worldview XML format
