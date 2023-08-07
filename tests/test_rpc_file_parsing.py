@@ -20,6 +20,7 @@ def supported_files():
         "rpc_WV1.xml",
         "rpc_WV2.xml",
         "rpc_WV3.xml",
+        "rpc_cam2rpc.xml",
     ]
 
     return [os.path.join(files_dir, filename) for filename in filenames]
