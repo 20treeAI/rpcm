@@ -76,7 +76,9 @@ def read_rpc_xml(rpc_content):
         elif a.text in ["PNEO_SENSOR"]:
             parsed_rpc = read_rpc_xml_pleiades_neo(tree)
     elif b is not None:
-        if b.text == "WV02" or b.text == "WV01" or b.text == "WV03":
+        if b.text == "cam2rpc":
+            parsed_rpc = read_rpc_xml_cam2rpc(tree)
+        elif b.text == "WV02" or b.text == "WV01" or b.text == "WV03":
             parsed_rpc = read_rpc_xml_worldview(tree)
     if not parsed_rpc:
         raise NotImplementedError()
@@ -245,4 +247,37 @@ def read_rpc_xml_worldview(tree):
     m["LAT_SCALE"   ] = float(im.find("LATSCALE").text)
     m["LONG_SCALE"  ] = float(im.find("LONGSCALE").text)
     m["HEIGHT_SCALE"] = float(im.find("HEIGHTSCALE").text)
+    return m
+
+def read_rpc_xml_cam2rpc(tree):
+    m = {}
+    d = tree.find("RPB/IMAGE")
+
+    m["LON_NUM_COEFF"] = d.find("SAMPNUMCOEFList/SAMPNUMCOEF").text
+    m["LON_DEN_COEFF"] = d.find("SAMPDENCOEFList/SAMPDENCOEF").text
+    m["LAT_NUM_COEFF"] = d.find("LINENUMCOEFList/LINENUMCOEF").text
+    m["LAT_DEN_COEFF"] = d.find("LINEDENCOEFList/LINEDENCOEF").text
+    m["SAMP_NUM_COEFF"]  =  d.find("SAMPNUMCOEFList/SAMPNUMCOEF").text
+    m["SAMP_DEN_COEFF"]  = d.find("SAMPDENCOEFList/SAMPDENCOEF").text
+    m["LINE_NUM_COEFF"]  = d.find("LINENUMCOEFList/LINENUMCOEF").text
+    m["LINE_DEN_COEFF"]  = d.find("LINEDENCOEFList/LINEDENCOEF").text
+    m["ERR_BIAS"]        = d.find("ERRBIAS").text
+
+    m["LINE_OFF"    ] = float(d.find("LINEOFFSET").text) - 1
+    m["SAMP_OFF"    ] = float(d.find("SAMPOFFSET").text) - 1
+    m["LAT_OFF"     ] = float(d.find("LATOFFSET").text)
+    m["LONG_OFF"    ] = float(d.find("LONGOFFSET").text)
+    m["HEIGHT_OFF"  ] = float(d.find("HEIGHTOFFSET").text)
+
+    m["LINE_SCALE"  ] = float(d.find("LINESCALE").text)
+    m["SAMP_SCALE"  ] = float(d.find("SAMPSCALE").text)
+    m["LAT_SCALE"   ] = float(d.find("LATSCALE").text)
+    m["LONG_SCALE"  ] = float(d.find("LONGSCALE").text)
+    m["HEIGHT_SCALE"] = float(d.find("HEIGHTSCALE").text)
+
+    b = tree.find("IMD/BAND_P")
+    m["FIRST_LON"] = float(b.find("ULLON").text)
+    m["FIRST_LAT"] = float(b.find("ULLAT").text)
+    m["LAST_LON"] = float(b.find("LRLON").text)
+    m["LAST_LAT"] = float(b.find("LRLAT").text)
     return m
