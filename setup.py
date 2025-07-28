@@ -26,6 +26,7 @@ def readme():
 
 requirements = ['numpy',
                 'pyproj',
+                'defusedxml',
                 'geojson',
                 'rasterio>=1.2']
 
