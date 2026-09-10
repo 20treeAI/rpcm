@@ -6,7 +6,7 @@ import rasterio as rio
 pyproj.network.set_network_enabled(active=True)
 os.environ["PROJ_UNSAFE_SSL"] = "TRUE"  # Required by pyproj to download external datum information
 
-SRTM_VRT = "gs://overstory-dtms/srtm_v41_90m/index.vrt"
+SRTM_VRT = "gs://us-overstory-dtms/srtm_v41_90m/index.vrt"
 
 
 def get_srtm_elevations(lons: list[float], lats: list[float], convert_ellipsoidal: bool) -> list[float]:
